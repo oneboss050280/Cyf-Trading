@@ -73,6 +73,28 @@ Pricing and promotional terms must be checked against the live checkout configur
 
 No production implementation, deployed website, billing integration, or live trading capability is established by this README. Development and release readiness must be verified separately.
 
+## Terms and Conditions
+
+Before public launch, CYF Trading will publish clear, accessible Terms and Conditions describing membership eligibility, pricing, free trials, renewals, cancellation, acceptable use, service availability, third-party exchange connections, user responsibilities, dispute procedures, and limitations of liability. Customers must be able to review the terms before subscribing. Trading involves risk, and no profit or performance outcome is guaranteed.
+
+## Privacy Policy
+
+Before collecting production user data, CYF Trading will publish a Privacy Policy describing the personal information collected, why it is used, the roles of Supabase and Stripe, exchange-connection data, retention and deletion practices, security safeguards, user privacy choices, and contact information. Payment-card details are processed by Stripe rather than stored by CYF Trading. Actual data practices must be verified against the deployed implementation and applicable laws before publication.
+
+## Security Documentation
+
+CYF Trading will maintain security documentation covering:
+
+- Authentication, email verification, secure password recovery, session management, and access control through Supabase.
+- Database row-level security, least-privilege roles, and server-side authorization checks.
+- Stripe webhook signature verification, billing-event idempotency, subscription entitlement validation, and fraud/duplicate-trial controls.
+- Secure exchange authorization and API credential handling; never request withdrawal or transfer privileges.
+- Encryption in transit, secure handling of secrets, credential rotation, and no secrets in source control or client-side code.
+- Logging, monitoring, incident response, backup/recovery procedures, and vulnerability remediation.
+- Dependency reviews, testing, and production-release security checks.
+
+Detailed policies and procedures will be maintained as separate documents and linked here when approved. These sections describe requirements, **not completed security certifications or assurances**.
+
 ## Release Requirements
 
 1. Build and review responsive UI and accessible account flows.
