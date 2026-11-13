@@ -16,6 +16,18 @@ Give people accessible tools to understand markets and make their own trading de
 - **Security first.** Authentication, payment verification, authorization, and auditability must be validated before public release.
 - **Transparent billing.** Subscription terms, trial conditions, renewals, and cancellation options must be clearly disclosed.
 
+## Connect Your Own Exchange Account
+
+CYF Trading users connect **their own accounts at supported third-party cryptocurrency exchanges**. CYF Trading does not create exchange accounts for users, hold customer deposits, or act as custodian of customer assets.
+
+- Users are responsible for opening, maintaining, and verifying their exchange accounts and complying with the exchange's requirements.
+- Any exchange connection must be explicitly authorized by the user through the exchange's supported connection method.
+- Where API credentials are required, connections should use the minimum permissions necessary. **Withdrawal and transfer permissions must not be requested or enabled.**
+- Exchange credentials and tokens must be protected using appropriate secure storage and access controls; they must never be committed to this repository or exposed in browser code.
+- Users can disconnect their exchange integration and revoke access through their exchange account.
+- Market analysis and trade suggestions do not authorize execution. Any trade action requires the user's explicit confirmation.
+- Supported exchanges and actual connection capabilities will be documented only after integration and security testing.
+
 ## Planned Platform
 
 - Responsive website for mobile, tablet, and desktop
