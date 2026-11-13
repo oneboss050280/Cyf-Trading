@@ -18,9 +18,10 @@ Give people accessible tools to understand markets and make their own trading de
 
 ## Connect Your Own Exchange Account
 
-CYF Trading users connect **their own accounts at supported third-party cryptocurrency exchanges**. CYF Trading does not create exchange accounts for users, hold customer deposits, or act as custodian of customer assets.
+CYF Trading users add and connect **their own existing accounts at supported third-party cryptocurrency exchanges**, such as **Coinbase, Kraken, Binance, and Binance.US**, subject to integration availability, exchange restrictions, and regional eligibility. CYF Trading does not create exchange accounts for users, hold customer deposits, or act as custodian of customer assets.
 
 - Users are responsible for opening, maintaining, and verifying their exchange accounts and complying with the exchange's requirements.
+- The listed exchanges are **planned connection options**, not a claim that their integrations are currently active.
 - Any exchange connection must be explicitly authorized by the user through the exchange's supported connection method.
 - Where API credentials are required, connections should use the minimum permissions necessary. **Withdrawal and transfer permissions must not be requested or enabled.**
 - Exchange credentials and tokens must be protected using appropriate secure storage and access controls; they must never be committed to this repository or exposed in browser code.
