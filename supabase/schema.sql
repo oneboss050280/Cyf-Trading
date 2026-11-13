@@ -1,0 +1,13 @@
+create table if not exists public.profiles (id uuid primary key references auth.users(id) on delete cascade,kyc_status text not null default 'not_started' check(kyc_status in ('not_started','pending','verified','rejected','requires_review')),created_at timestamptz not null default now());
+create table if not exists public.subscriptions(id uuid primary key default gen_random_uuid(),user_id uuid not null references auth.users(id) on delete cascade,stripe_customer_id text, stripe_subscription_id text unique,status text not null default 'inactive',tier text check(tier in ('monthly','annual')),updated_at timestamptz not null default now());
+create table if not exists public.trade_approvals(id uuid primary key default gen_random_uuid(),user_id uuid not null references auth.users(id) on delete cascade,order_spec jsonb not null,status text not null default 'pending_user_approval' check(status in ('pending_user_approval','approved','rejected','expired','executed')),expires_at timestamptz not null,created_at timestamptz not null default now());
+create table if not exists public.exchange_connections(id uuid primary key default gen_random_uuid(),user_id uuid not null references auth.users(id) on delete cascade,provider text not null,credential_reference text not null,created_at timestamptz not null default now());
+create table if not exists public.webhook_events(id text primary key,received_at timestamptz not null default now());
+create table if not exists public.audit_logs(id bigint generated always as identity primary key,user_id uuid references auth.users(id),event_type text not null,metadata jsonb,created_at timestamptz not null default now());
+alter table public.profiles enable row level security;alter table public.subscriptions enable row level security;alter table public.trade_approvals enable row level security;alter table public.exchange_connections enable row level security;alter table public.webhook_events enable row level security;alter table public.audit_logs enable row level security;
+create policy "read own profile" on public.profiles for select to authenticated using (id=auth.uid());
+create policy "read own subscription" on public.subscriptions for select to authenticated using (user_id=auth.uid());
+create policy "read own approvals" on public.trade_approvals for select to authenticated using (user_id=auth.uid());
+create policy "read own connections" on public.exchange_connections for select to authenticated using (user_id=auth.uid());
+create policy "read own audit" on public.audit_logs for select to authenticated using (user_id=auth.uid());
+-- Writes to KYC, entitlements, approvals, connections and audit logs must be made only by trusted server services.
