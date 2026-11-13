@@ -4,7 +4,7 @@
 
 CYF Trading is a noncustodial trading technology platform under development, designed to provide market information, analytical tools, AI-assisted analysis, and user-controlled trading workflows. Customers retain ownership and control of their exchange accounts and assets.
 
-**Document:** README Version 2.1 — approved project requirements. This document does not certify that planned features are operational.
+**Document:** README Version 2.2 — approved architecture requirements (November 13, 2026). This document does not certify that planned features are operational.
 
 ## 1. Company Overview
 
@@ -26,7 +26,7 @@ CYF Trading is a noncustodial trading technology platform under development, des
 
 ## 3. Platform Features and Navigation
 
-The website will be mobile-first and responsive across desktop, tablet, and smartphone screens.
+The website will be mobile-first and responsive across desktop, tablet, and smartphone screens. The Midnight theme uses charcoal/black backgrounds and violet accents `#7C6FFF` and `#6450F0`; animations must respect reduced-motion preferences.
 
 **Primary navigation:** Dashboard | Markets | Trade | Portfolio | Support | Account
 
@@ -58,7 +58,7 @@ Privileged operations must remain server-side. Secrets and access tokens must ne
 
 ## 5. User Registration and Authentication
 
-Supabase is the intended account authentication and application identity system.
+Supabase is the intended account authentication and application identity system. Supabase Auth owns password hashes; application profile tables must not duplicate password fields. Mandatory identity verification through a vetted KYC provider is required before access to live trading features. KYC states include `not_started`, `pending`, `verified`, `rejected`, and `requires_review`. Do not store raw identity documents unless strictly required and lawfully justified.
 
 - Email-based registration, verification, and secure password creation.
 - Clearly labeled Login and Sign Up controls with meaningful error messages.
@@ -193,6 +193,49 @@ Each phase must be verified before being marked complete.
 - [ ] Production deployment, monitoring, and recovery procedures verified.
 
 Real-money trading and unverified AI automation must remain disabled until applicable safety and operational controls have passed testing.
+
+## 14A. Approved Production Architecture — November 13, 2026
+
+**Status:** Approved specification, not a claim of completed implementation.
+
+### System boundaries
+- **Cloudflare Pages:** Responsive Midnight PWA with Dashboard, Markets, Trade, Portfolio, Support, and Account; public Login and Sign Up.
+- **Cloudflare Workers:** Authenticated API gateway, server-side trade authorization, market-feed proxy/WebSocket coordination, Stripe checkout and webhook handlers.
+- **Supabase:** Auth, PostgreSQL, row-level security, user profiles, membership entitlements, exchange metadata, trade approval records, audit logs.
+- **Stripe:** $10 monthly / $75 annual recurring plans, **no trial or promotion**, customer portal, signed webhook event reconciliation.
+- **Dedicated market-data/exchange provider:** Real-time prices, order books, and approved order submission. Stripe, GitHub, Supabase, and Cloudflare are not primary exchange price feeds.
+- **KYC provider:** Server-verified identity status; restrict access to live trading until verified. Account, billing, support, and verification remain accessible when trading is locked.
+
+### Core data model
+- `profiles`: `user_id` (Supabase Auth foreign key), `email`, `created_at`. No application-managed password hashes.
+- `kyc_verifications`: `user_id`, `provider_reference`, `status`, `verified_at`, `updated_at`; provider webhook verified server-side.
+- `subscriptions`: `user_id`, `stripe_customer_id`, `stripe_subscription_id`, `plan`, `status`, `current_period_end`.
+- `exchange_connections`: `id`, `user_id`, `exchange`, `status`, `permissions`, `secret_reference`, `revoked_at`; credentials encrypted and isolated from clients.
+- `portfolios`: `user_id`, `asset_symbol`, `quantity`, `average_buy_price`, `source_exchange`, `last_synced_at`.
+- `market_data`: `symbol`, `current_price`, `percent_change_24h`, `source`, `last_updated`; timestamps and stale-feed warnings required.
+- `trade_suggestions`: `id`, `user_id`, `exchange_connection_id`, `symbol`, `side`, `quantity`, `order_type`, `limit_price`, `expires_at`, `status`.
+- `trade_approvals`: `id`, `suggestion_id`, `user_id`, `decision`, `approved_order_hash`, `approved_at`, `expires_at`, `consumed_at`.
+- `trades`: `id`, `user_id`, `suggestion_id`, `exchange_order_id`, `idempotency_key`, `status`, `created_at`.
+- `webhook_events`: `provider`, `event_id` (unique per provider), `processed_at`, `status`.
+- `audit_logs`: `actor_id`, `action`, `target_id`, `timestamp`, `metadata` (redacted).
+
+### Trade execution invariant
+1. AI generates a non-executable proposal; the UI shows exact exchange, asset, side, quantity, order type, price constraints, fees estimate, and expiration.
+2. User explicitly chooses **Yes** or **No** for that specific immutable proposal; no default approval or unattended execution.
+3. Backend revalidates authenticated session, verified KYC, active subscription, exchange permissions, proposal expiry, unchanged order hash, market constraints, and one-time approval.
+4. A transactional state transition consumes the approval once; an idempotent order-submission worker submits only the approved parameters.
+5. Rejected, expired, edited, replayed, or unauthorized proposals **must never** reach the exchange. Retry/reconciliation must not duplicate orders.
+6. Exchange API credentials must have **no withdrawal or transfer scope**. AI and support agents cannot call the order-submission path without a fresh, user-specific approval.
+
+### Security and reliability acceptance criteria
+- Supabase RLS denies cross-user access; privileged service keys only in server secrets.
+- Stripe and KYC webhooks have verified signatures, deduplication, replay resistance, and auditable state transitions.
+- KYC provider selection and retention/legal obligations reviewed before collecting identity information.
+- Market stream reconnects with backoff, timestamps, stale-data warnings, and reduced-motion support.
+- Billing cancellation and account deletion are accessible independently of trading eligibility.
+- Separate staging/production credentials and databases; no real orders in staging.
+- End-to-end tests cover rejection, approval expiry, double-click/replay, concurrent approvals, revoked credentials, stale prices, webhook retries, and payment failure.
+- Production live trading remains **disabled** until all gates, legal review, and end-to-end tests are completed.
 
 ## 14. Risk Disclosures and Important Disclaimer
 
