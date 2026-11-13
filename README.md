@@ -50,6 +50,14 @@ These features are **planned**, not claims that the services are currently live 
 
 Integrations must be implemented, tested, and verified before being described as production-ready.
 
+## Membership Billing and User Accounts
+
+- **Stripe handles membership subscriptions and associated membership fees**, including checkout, payment processing, recurring billing, and payment-method management. CYF Trading does not store customers' credit card details.
+- **Supabase handles CYF Trading user accounts**, including registration, authentication, email verification, password recovery, and user profile data.
+- Membership status and access permissions are synchronized securely between verified Stripe billing events and Supabase. A successful checkout alone must not grant access until the subscription state is verified.
+- Users manage their own exchange accounts separately. Supabase authentication and Stripe membership billing do not give CYF Trading custody of exchange funds.
+- The billing and account integrations are planned and must be implemented and tested before production launch.
+
 ## Membership Plans (Proposed)
 
 - Monthly: **$10/month**
