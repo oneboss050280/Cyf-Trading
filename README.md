@@ -1,0 +1,71 @@
+# CYF Trading
+
+**Control Your Future.**
+
+CYF Trading is a noncustodial trading technology platform being developed to provide market information, trading tools, and user-controlled workflows.
+
+## Our Mission
+
+Give people accessible tools to understand markets and make their own trading decisions while retaining control of their funds and accounts.
+
+## Core Principles
+
+- **Your funds stay yours.** CYF Trading does not take custody of customer funds.
+- **You make the decisions.** Any AI-generated analysis or trade suggestion is informational; the user must explicitly approve any action.
+- **No guaranteed results.** Trading involves risk, including possible loss of capital. CYF Trading does not promise profits or provide personalized investment advice.
+- **Security first.** Authentication, payment verification, authorization, and auditability must be validated before public release.
+- **Transparent billing.** Subscription terms, trial conditions, renewals, and cancellation options must be clearly disclosed.
+
+## Planned Platform
+
+- Responsive website for mobile, tablet, and desktop
+- Secure account registration, email verification, sign-in, and password recovery
+- Market dashboards, charts, and analysis tools
+- User-directed trading workflows through separately authorized third-party integrations
+- Membership management and customer support
+- Clearly published Terms, Privacy, Refund, and Risk disclosures
+
+These features are **planned**, not claims that the services are currently live or operational.
+
+## Intended Technology
+
+- **GitHub:** Source control
+- **Cloudflare:** Website hosting and server-side endpoints
+- **Supabase:** Authentication and application data
+- **Stripe:** Subscription billing
+- **TradingView:** Market charting where appropriate
+
+Integrations must be implemented, tested, and verified before being described as production-ready.
+
+## Membership Plans (Proposed)
+
+- Monthly: **$10/month**
+- Annual: **$75/year**
+- Seven-day free trial, subject to eligibility and clear checkout disclosures
+- Founding-member promotion: first 100 eligible annual members may receive a **$50 first year**, renewing at **$75/year**, subject to published terms and verified eligibility controls
+
+Pricing and promotional terms must be checked against the live checkout configuration before launch.
+
+## Development Status
+
+**Fresh repository — initial project documentation.**
+
+No production implementation, deployed website, billing integration, or live trading capability is established by this README. Development and release readiness must be verified separately.
+
+## Release Requirements
+
+1. Build and review responsive UI and accessible account flows.
+2. Implement authentication and secure session handling.
+3. Implement server-side billing, signed Stripe webhooks, trial eligibility, duplicate-subscription prevention, and customer cancellation.
+4. Apply and version database migrations; verify row-level security and least-privilege access.
+5. Publish and review legal disclosures and customer support contact details.
+6. Test the complete signup-to-subscription lifecycle in a safe test environment.
+7. Keep real-money trading disabled until external integrations, permissions, and safety controls are independently validated.
+
+## Important Disclaimer
+
+CYF Trading supplies software and information, not guarantees of financial outcomes. Users remain responsible for their decisions. Markets determine results.
+
+---
+
+**CYF Trading — Control Your Future.**
